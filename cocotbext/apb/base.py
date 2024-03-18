@@ -523,6 +523,7 @@ class APBSlaveDriver(BusMonitor):
         '''
 
         await RisingEdge(self.clock)
+        await RisingEdge(self.clock)
 
         # default to ready
         self.bus.PREADY.value = 1
@@ -530,11 +531,9 @@ class APBSlaveDriver(BusMonitor):
 
         while True:
 
-
             # get the register word index
             address = self.bus.PADDR.value.integer
             word_index = int( (address % (2**self.address_bits-1) ) / 4 )
-
 
             if state == 'IDLE':
 
