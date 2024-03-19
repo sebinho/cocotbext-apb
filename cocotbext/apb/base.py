@@ -239,6 +239,8 @@ class APBMonitor(BusMonitor):
         '''
 
         await RisingEdge(self.clock)
+        await RisingEdge(self.clock)
+
         while True:
 
             # both slave and master are ready for transfer
