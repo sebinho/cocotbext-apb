@@ -54,7 +54,7 @@ class APBTransaction(Randomized):
     """
 
     def __init__(self, address, data=None, direction=None, strobe=[True,True,True,True],
-                        error=None, bus_width=32, address_width=12):
+                        error=None, bus_width=32, address_width=16):
         Randomized.__init__(self)
 
         self.log = logging.getLogger("cocotb.tb.apb")
