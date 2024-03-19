@@ -27,6 +27,7 @@ APB Transaction and Agent
 
 from collections import deque
 import random
+import logging
 
 import cocotb
 from cocotb.triggers import RisingEdge, ReadOnly
@@ -55,6 +56,8 @@ class APBTransaction(Randomized):
     def __init__(self, address, data=None, direction=None, strobe=[True,True,True,True],
                         error=None, bus_width=32, address_width=12):
         Randomized.__init__(self)
+
+        self.log = logging.getLogger("cocotb.tb.apb")
 
         # check input values
         assert direction in [None, 'READ', 'WRITE'], "The direction must be either: None, 'READ', 'WRITE'"
@@ -111,28 +114,20 @@ class APBTransaction(Randomized):
         '''
             Print a transaction information in a nice readable format
         '''
-
-        print('-'*120)
-        print('APB Transaction - ', end='')
         if self.start_time:
-            print('Started at %d ns' % self.start_time)
+            str_add = 'Started at %d ns' % self.start_time
         else:
-            print('Has not occurred yet')
-        print('')
-
-        print('  Address:   0x%08X' % self.address)
-        print('  Direction: %s' % self.direction)
-        print('  Data:      ', end='')
+            str_add = 'Has not occurred yet'
+        self.log.info('APB Transaction - ' + str_add)
 
         if self.data != None:
-            print('0x%0*X ' % (int(self.bus_width/4),self.data))
+            str_add = 'Data: 0x%0*X ' % (int(self.bus_width/4),self.data)
         else:
-            print('NO DATA YET!')
+            str_add = 'NO DATA YET!'
+        self.log.info('Address: 0x%08X, ' % self.address + 'Direction: %s, ' % self.direction + str_add)
 
         if self.error:
-            print('  TRANSACTION ENDED IN ERROR!')
-            print('')
-        print('-'*120)
+            self.log.info('APB TRANSACTION ENDED IN ERROR!')
 
     def convert2string(self):
         """
@@ -163,7 +158,7 @@ class APBTransaction(Randomized):
         try:
             return int(''.join([ '1' if x else '0' for x in self.strobe ]), 2)
         except ValueError as e:
-            print(self.strobe)
+            self.log.info(self.strobe)
             raise e
 
     def __repr__(self):
