@@ -570,7 +570,7 @@ class APBSlaveDriver(BusMonitor):
             elif state == 'ACCESS':
 
                 # is the address within bounds?
-                if word_index-1 > len(self.registers):
+                if word_index-1 < len(self.registers):
 
                     # sample data from the bus
                     if pwrite[self.bus.PWRITE.value.integer] == 'WRITE':
